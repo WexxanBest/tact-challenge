@@ -27,6 +27,12 @@ contract Task2 with Deployable {
   
 	receive(msg: Refund) {
 		require(sender() == self.admin, "Only admin can refund!");
+		send(SendParameters{
+            to: msg.sender,
+            value: context().value, 
+            mode: SendIgnoreErrors,
+            body: "refund".asComment()
+        });
 	}
 
 	receive(msg: Slice) {
