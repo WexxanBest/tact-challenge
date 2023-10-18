@@ -6,7 +6,6 @@ import "@stdlib/deploy";
   which adds or subtracts the received number (int32) from the number that is stored in the state (and stores the result back in the state).
   You also need to implement one getter with the name "counter" to get the current number from the state.
 */
-// run actions pls
 
 message Add {
   	queryId: Int as uint64;
@@ -27,12 +26,12 @@ contract Task1 with Deployable {
 
     receive(msg: Add) {
 		self.counter = self.counter + msg.number;
-		self.reply(".".asComment());
+		//self.reply(".".asComment()); // it returns gas to sender, but consumes network gas :(
     }
     
     receive(msg: Subtract) {
 		self.counter = self.counter - msg.number;
-		self.reply(".".asComment());
+		//self.reply(".".asComment());
     }
 
     get fun counter(): Int {
