@@ -29,19 +29,20 @@ contract Task2 with Deployable {
 		require(sender() == self.admin, "Only admin can refund!");
 		send(SendParameters{
             to: msg.sender,
-            value: context().value, 
-            mode: SendIgnoreErrors,
+            value: 0, //context().value, 
+            mode: SendRemainingValue + SendIgnoreErrors,
             body: "refund".asComment()
-        });
+      });
 	}
 
 	receive(msg: Slice) {
 		send(SendParameters{
-            to: self.admin,
-            value: context().value, 
-            mode: SendIgnoreErrors,
-            //body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
-            body: beginCell().storeAddress(sender()).storeSlice(msg).endCell()
+          to: self.admin,
+          value: 0, //context().value, 
+          mode: SendRemainingValue + SendIgnoreErrors,
+          //body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
+          // body: beginCell().storeAddress(sender()).storeSlice(msg).endCell()
+          body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
         });
 	}
 }
