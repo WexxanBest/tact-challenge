@@ -62,7 +62,7 @@ contract Task4 with Deployable {
 	receive(msg: OwnershipAssigned) {
 		if(self.assigned){ // There is already NFT locked
 			send(SendParameters{
-				to: msg.prevOwner,
+				to: sender(),
 				value: 0,
 				mode: SendIgnoreErrors,
 				body: Transfer{
