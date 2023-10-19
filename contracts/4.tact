@@ -98,11 +98,13 @@ contract Task4 with Deployable {
 	}
 
 	receive(msg: NftWithdrawal) {
-		require(self.owner != null, "There is no owner yet.");
+		require(self.assigned, "Nothing assigned yet.");
 		require(context().sender == self.owner, "Invalid sender");
 		if(self.time() != 0){
 			self.reply("NFT is still locked".asComment());
 		}else{
+			self.assigned = false;
+			require(msg.nftAddress == self.nftAddress, "Wrong NFT Address!");
 			send(SendParameters{
 				to: msg.nftAddress,
 				value: 0,
