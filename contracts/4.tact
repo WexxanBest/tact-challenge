@@ -62,7 +62,7 @@ contract Task4 with Deployable {
 	receive(msg: OwnershipAssigned) {
 		if(self.assigned){ // There is already NFT locked
 			send(SendParameters{
-				to: sender(),
+				to: context().sender,
 				value: 0,
 				mode: SendIgnoreErrors,
 				body: Transfer{
@@ -78,11 +78,11 @@ contract Task4 with Deployable {
 			self.assigned = true;
 			self.assignedTime = now();
 
-			self.nftAddress = sender();
+			self.nftAddress = context().sender;
 			self.owner = msg.prevOwner;
 			self.duration = msg.forwardPayload.loadUint(32);
 			send(SendParameters{
-				to: sender(),
+				to: context().sender,
 				value: 0,
 				mode: SendIgnoreErrors + SendRemainingBalance,
 				body: Transfer{
@@ -99,7 +99,7 @@ contract Task4 with Deployable {
 
 	receive(msg: NftWithdrawal) {
 		require(self.owner != null, "There is no owner yet.");
-		require(sender() == self.owner, "Invalid sender");
+		require(context().sender == self.owner, "Invalid sender");
 		if(self.time() != 0){
 			self.reply("NFT is still locked".asComment());
 		}else{
