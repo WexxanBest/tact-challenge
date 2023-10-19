@@ -50,15 +50,13 @@ contract Task4 with Deployable {
 	seed: Int as uint128;
 	assignedTime: Int as uint32 = 0;
 	assigned: Bool = false;
-	nftAddress: Address;
-	owner: Address;
+	nftAddress: Address?;
+	owner: Address?;
 	duration: Int as uint32 = 0;
 
 
 	init(seed: Int) {
 		self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
-		self.nftAddress = newAddress(0, 0);
-		self.owner = newAddress(0, 0);
 	}
 
 	receive(msg: OwnershipAssigned) {
@@ -90,20 +88,14 @@ contract Task4 with Deployable {
 		require(sender() == self.owner, "Invalid sender");
 		if(self.time() != 0){
 			self.reply("NFT is still locked".asComment());
-			// send(SendParameters{
-			// 	to: sender(),
-			// 	value: 0,
-			// 	mode: SendIgnoreErrors,
-			// 	body: "NFT is still locked".asComment()
-			// });
 		}else{
 			send(SendParameters{
-				to: self.owner,
+				to: self.owner!!,
 				value: 0,
 				mode: SendIgnoreErrors + SendRemainingBalance,
 				body: Transfer{
 					queryId: msg.queryId,         
-					newOwner: self.owner, 
+					newOwner: self.owner!!, 
 					responseDestination: myAddress(), 
 					customPayload: null,
 					forwardAmount: 0, 
